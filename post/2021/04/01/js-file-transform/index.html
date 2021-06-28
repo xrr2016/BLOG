@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+  <meta name="renderer" content="webkit|ie-comp|ie-stand" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="theme-color" content="#333333" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="google" content="notranslate" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="keyword" content="冷石, 前端, 面试，Web, Js, CSS, Node.js, Frontend, Flutter, Docker, Dart, Mysql, Egg.js" />
+  <meta name="description" content="孑然一身，傲立于世" />
+  <title>冷石的博客</title>
+  <base href="/" />
+  <link rel="preconnect" href="//cdn.jsdelivr.net" />
+  <link rel="shortcut icon" href="/icons/icon-72x72.png" />
+  <link
+    rel="apple-touch-icon"
+    href="/icons/icon-192x192.png"
+  />
+  <link
+    rel="stylesheet"
+    href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.7.2/build/styles/atom-one-light.min.css"
+  />
+  <link rel="stylesheet" href="/index.css">
+  <script
+    data-ad-client="ca-pub-1196485898698315"
+    async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+  ></script>
+</head>
+
+  <body>
+    <header class="header">
+  <a class="logo" href="/">
+    <img
+      class="logo-img"
+      src="https://avatars.githubusercontent.com/u/18013127?v=4"
+    />
+  </a>
+  <div class="color" id="color"></div>
+</header>
+
+    <main class=""><article class="container article">
+    
+      <div class="article-cover">
+        <img decoding="async" loading="lazy" src="./images/js-file-transform/cover.jpg" alt="cover" />
+      </div>
+    
+
+    <h1 class="article-title">JS 文件转换</h1>
+ 
+    <p class="article-meta">
+      <span class="article-meta-item">
+        最后更新&#58;&nbsp;<time
+          class="post-time"
+          datetime="2021-06-28"
+          >2021-06-28</time
+        >
+      </span>
+      <span class="article-meta-item"
+        >阅读时间&#58;&nbsp;2
+        min</span
+      >
+
+    </p>
+  </section>
+
+  <section class=""><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近需要将 base64 格式的图片转化成 JS 里的 File 对象进行上传，于是学习了一下这方面的知识</p>
+<h2 id="Base64-转-Blob"><a href="#Base64-转-Blob" class="headerlink" title="Base64 转 Blob"></a>Base64 转 Blob</h2><ol>
+<li><p>分割 Base64 数据，生成类文件对象，base64 -&gt; Uint8Array -&gt; Blob</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">dataURI2Blob</span>(<span class="params">dataURI</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 分割数据</span></span><br><span class="line">  <span class="keyword">const</span> [meta, data] = dataURI.split(<span class="string">','</span>)</span><br><span class="line">  <span class="comment">// 对数据编码</span></span><br><span class="line">  <span class="keyword">let</span> byte</span><br><span class="line">  <span class="keyword">if</span> (meta.includes(<span class="string">'base64'</span>)) &#123;</span><br><span class="line">    byte = atob(data)</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    byte = <span class="built_in">encodeURI</span>(data)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 获取图片格式</span></span><br><span class="line">  <span class="keyword">const</span> mime = meta.split(<span class="string">':'</span>)[<span class="number">1</span>].split(<span class="string">';'</span>)[<span class="number">0</span>]</span><br><span class="line">  <span class="comment">// 创建 8 位无符号整型数组</span></span><br><span class="line">  <span class="keyword">const</span> ia = <span class="keyword">new</span> <span class="built_in">Uint8Array</span>(byte.length)</span><br><span class="line">  <span class="comment">// 获取字符 UTF-16 编码值</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; byte.length; i++) &#123;</span><br><span class="line">    ia[i] = byte.codePointAt(i)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 生成类文件对象</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> Blob([ia], &#123; <span class="attr">type</span>: mime &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>拓展一下直接转成 File 对象也可以</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 生成文件对象</span></span><br><span class="line"><span class="keyword">new</span> File([ia], <span class="string">'test.jpg'</span>, &#123; <span class="attr">type</span>: mime &#125;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>取巧的方法，利用 fetch </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">dataURI2Blob</span>(<span class="params">dataURI</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 返回 blob 类型的数据</span></span><br><span class="line">  <span class="keyword">const</span> blob = <span class="keyword">await</span> fetch(dataURI).then(<span class="function">(<span class="params">res</span>) =&gt;</span> res.blob())</span><br><span class="line">  <span class="keyword">return</span> blob</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>个人喜好第二种，毕竟简洁易懂，代码量也少很多。之后就可以进行上传文件的操作了</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fd = <span class="keyword">new</span> FormData();</span><br><span class="line">fd.append(<span class="string">"img"</span>, blob, <span class="string">"test.jpg"</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="Blob-转-Base64"><a href="#Blob-转-Base64" class="headerlink" title="Blob 转 Base64"></a>Blob 转 Base64</h2><p>使用 FileReader 进行反向转换，同理可转换 File 对象</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">blob2Base64</span>(<span class="params">blob, callback</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> reader = <span class="keyword">new</span> FileReader()</span><br><span class="line"></span><br><span class="line">  reader.addEventListener(<span class="string">'load'</span>, () =&gt; &#123;</span><br><span class="line">    callback(reader.result)</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  reader.readAsDataURL(blob)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="拓展一下"><a href="#拓展一下" class="headerlink" title="拓展一下"></a>拓展一下</h2><p>将远程图片转换为 Base64 格式 url -&gt;  Image -&gt; Canvas -&gt; Base64</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"> <span class="function"><span class="keyword">function</span> <span class="title">remoteImageToBase64</span>(<span class="params">url, callback</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> img = <span class="keyword">new</span> Image()</span><br><span class="line">  <span class="keyword">let</span> canvas = <span class="built_in">document</span>.createElement(<span class="string">'canvas'</span>)</span><br><span class="line">  <span class="keyword">let</span> context = canvas.getContext(<span class="string">'2d'</span>)</span><br><span class="line"></span><br><span class="line">  img.addEventListener(<span class="string">'load'</span>, () =&gt; &#123;</span><br><span class="line">    canvas.width = img.width</span><br><span class="line">    canvas.height = img.height</span><br><span class="line">    context.drawImage(img, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回 Canvas 的 base64 数据</span></span><br><span class="line">    callback(canvas.toDataURL(<span class="string">'image/jpg'</span>, <span class="number">1</span>))</span><br><span class="line">    canvas = <span class="literal">null</span></span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  img.src = url</span><br><span class="line">  <span class="comment">// 处理 Canvas 跨域</span></span><br><span class="line">  img.crossOrigin = <span class="string">'Anonymous'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> remoteImageToBase64(<span class="string">'https://game.gtimg.cn/images/lol/act/img/skin/big145014.jpg'</span>, (res) =&gt; &#123;</span><br><span class="line">   <span class="built_in">console</span>.log(<span class="string">'base64: '</span>, res)</span><br><span class="line"> &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>当然也可以使用 fetch 转为 Blob 类型</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">remoteImageToBlob</span>(<span class="params">url</span>) </span>&#123;</span><br><span class="line">   <span class="keyword">const</span> blob = <span class="keyword">await</span> fetch(url).then(<span class="function">(<span class="params">res</span>) =&gt;</span> res.blob())</span><br><span class="line">   </span><br><span class="line">   <span class="keyword">return</span> blob</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="string">`</span></span><br></pre></td></tr></table></figure>
+
+<p>完</p></section>
+
+  <a
+  class="license-link"
+  rel="license"
+  href="https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.zh-Hans"
+>
+  <img
+    class="license-img"
+    alt="知识共享许可协议"
+    src="https://img.shields.io/badge/license-BY--NC--SA%204.0-green"
+  />
+</a>
+
+  <section class="article-more">
+    
+    <a
+      class=""
+      href="/post/2021/04/13/js-check-element/"
+      title="JS 检查元素是否在视口内"
+    >
+      &larr;&nbsp;JS 检查元素是否在视口内
+    </a>
+     
+    <a
+      class=""
+      href="/post/2020/12/23/christmas-tree/"
+      title="画一颗圣诞树🎄"
+    >
+      画一颗圣诞树🎄&nbsp;&rarr;
+    </a>
+    
+  </section>
+</article></main>
+    <footer class="footer container">
+  <ul class="sns-list">
+    <li class="sns-list-item">
+      <p class="">
+        共计&#58; 61 篇
+      </p>
+    </li>
+    <li class="sns-list-item">
+      <p class="">
+        <span class=""
+          >总字数&#58; 63.9k</span
+        >
+      </p>
+    </li>
+  </ul>
+
+  <ul class="sns-list">
+    
+    <li class="sns-list-item">
+      <a
+        class="sns-list-link"
+        target="_blank"
+        rel="noopener"
+        href="https://github.com/xrr2016"
+        >Github</a
+      >
+    </li>
+     
+    <li class="sns-list-item">
+      <a
+        class="sns-list-link"
+        target="_blank"
+        rel="noopener"
+        href="https://juejin.im/user/576666b7207703006b1e0f09"
+        >掘金</a
+      >
+    </li>
+     
+    <li class="sns-list-item">
+      <a
+        class="sns-list-link"
+        target="_blank"
+        rel="noopener"
+        href="https://zhihu.com/people/needforchange/posts"
+        >知乎</a
+      >
+    </li>
+     
+    <li>
+      <a
+        class="sns-list-link"
+        target="_blank"
+        rel="noopener"
+        href="https://leetcode-cn.com/u/coldstone"
+        >力扣</a
+      >
+    </li>
+    
+    <li class="sns-list-item">
+      <a class="rss-link" href="/atom.xml">
+        <svg
+          class=""
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 5c7.18 0 13 5.82 13 13M6 11a7 7 0 017 7m-6 0a1 1 0 11-2 0 1 1 0 012 0z"
+          />
+        </svg>
+      </a>
+    </li>
+  </ul>
+
+  <ul class="sns-list">
+    <li class="sns-list-item">
+      <a
+        class="sns-list-link"
+        href="https://colmugx.github.io/blog/"
+        target="_blank"
+        >colmugx</a
+      >
+    </li>
+    <li class="sns-list-item">
+      <a class="sns-list-link" href="https://kalasearch.cn/blog" target="_blank"
+        >卡拉搜索</a
+      >
+    </li>
+    <li class="sns-list-item">
+      <a class="sns-list-link" href="https://blog.inmind.ltd/" target="_blank"
+        >Mind's blog</a
+      >
+    </li>
+    <li class="sns-list-item">
+      <a
+        class="sns-list-link"
+        href="https://oldchen.top/flutter-blog/#/"
+        target="_blank"
+        >老晨子</a
+      >
+    </li>
+    <li class="sns-list-item">
+      <a class="sns-list-link" href="https://www.v2fy.com/" target="_blank"
+        >猫爪导航🐱</a
+      >
+    </li>
+    <li class="sns-list-item">
+      <a class="sns-list-link" href="https://wxsm.space" target="_blank"
+        >wxsm's space</a
+      >
+    </li>
+  </ul>
+</footer>
+ <!--
+ Copyright (c) 2021 Cold Stone
+ 
+ This software is released under the MIT License.
+ https://opensource.org/licenses/MIT
+-->
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.7.2/build/highlight.min.js"></script>
+<script src="/index.js"></script>
+
+  </body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+  <meta name="renderer" content="webkit|ie-comp|ie-stand" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="theme-color" content="#333333" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="google" content="notranslate" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="keyword" content="冷石, 前端, 面试，Web, Js, CSS, Node.js, Frontend, Flutter, Docker, Dart, Mysql, Egg.js" />
+  <meta name="description" content="孑然一身，傲立于世" />
+  <title>冷石的博客</title>
+  <base href="/" />
+  <link rel="preconnect" href="//cdn.jsdelivr.net" />
+  <link rel="shortcut icon" href="/icons/icon-72x72.png" />
+  <link
+    rel="apple-touch-icon"
+    href="/icons/icon-192x192.png"
+  />
+  <link
+    rel="stylesheet"
+    href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.7.2/build/styles/atom-one-light.min.css"
+  />
+  <link rel="stylesheet" href="/index.css">
+  <script
+    data-ad-client="ca-pub-1196485898698315"
+    async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+  ></script>
+</head>
+
+  <body>
+    <header class="header">
+  <a class="logo" href="/">
+    <img
+      class="logo-img"
+      src="https://avatars.githubusercontent.com/u/18013127?v=4"
+    />
+  </a>
+  <div class="color" id="color"></div>
+</header>
+
+    <main class=""><article class="container article">
+    
+      <div class="article-cover">
+        <img decoding="async" loading="lazy" src="https://cdn.pixabay.com/photo/2021/05/14/21/50/elephant-6254558_960_720.jpg" alt="cover" />
+      </div>
+    
+
+    <h1 class="article-title">让 Hugo 博客支持 PWA</h1>
+ 
+    <p class="article-meta">
+      <span class="article-meta-item">
+        最后更新&#58;&nbsp;<time
+          class="post-time"
+          datetime="2021-06-28"
+          >2021-06-28</time
+        >
+      </span>
+      <span class="article-meta-item"
+        >阅读时间&#58;&nbsp;1
+        min</span
+      >
+
+    </p>
+  </section>
+
+  <section class=""><p>让用 Hugo 搭建的博客支持 PWA 很简单，只需 2 个步骤即可：</p>
+<h2 id="添加一个-manifest-json-文件"><a href="#添加一个-manifest-json-文件" class="headerlink" title="添加一个 manifest.json 文件"></a>添加一个 manifest.json 文件</h2><p>使用 <a href="https://app-manifest.firebaseapp.com" target="_blank" rel="noopener">https://app-manifest.firebaseapp.com</a> 来生成博客的 manifest.json 文件，然后将生成出来的文件和图片放到博客的 static 目录，然后在 layout/index.html 的 <head> 标签内引用这个文件</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  ...</span><br><span class="line">  <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"manifest"</span> <span class="attr">href</span>=<span class="string">"/manifest.json"</span> /&gt;</span></span><br><span class="line">  ...</span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这样你的博客就可以安装到桌面了</p>
+<h2 id="使用-Workbox-工具注册-ServiceWorker"><a href="#使用-Workbox-工具注册-ServiceWorker" class="headerlink" title="使用 Workbox 工具注册 ServiceWorker"></a>使用 Workbox 工具注册 ServiceWorker</h2><p>在 static 新建一个 <code>sw.js</code> 文件，在文件添加以下内容用来为网络请求添加缓存；主要是缓存静态资源 js，css，图片以及字体等文件，<br>详细文档可以查看 <a href="https://developers.google.cn/web/tools/workbox" target="_blank" rel="noopener">Workbox 文档</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">importScripts(<span class="string">'https://cdn.jsdelivr.net/npm/workbox-cdn/workbox/workbox-sw.js'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (workbox) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`Yay! Workbox is loaded 🎉`</span>)</span><br><span class="line"></span><br><span class="line">  workbox.routing.registerRoute(</span><br><span class="line">    /\.(?:js|css)$/,</span><br><span class="line">    <span class="keyword">new</span> workbox.strategies.StaleWhileRevalidate(&#123;</span><br><span class="line">      cacheName: <span class="string">'static-resources'</span></span><br><span class="line">    &#125;)</span><br><span class="line">  )</span><br><span class="line"></span><br><span class="line">  workbox.routing.registerRoute(</span><br><span class="line">    /\.(?:png|jpg|jpeg|svg|gif)$/,</span><br><span class="line">    <span class="keyword">new</span> workbox.strategies.CacheFirst(&#123;</span><br><span class="line">      cacheName: <span class="string">'image-cache'</span>,</span><br><span class="line">      plugins: [</span><br><span class="line">        <span class="keyword">new</span> workbox.expiration.Plugin(&#123;</span><br><span class="line">          maxEntries: <span class="number">20</span>,</span><br><span class="line">          maxAgeSeconds: <span class="number">7</span> * <span class="number">24</span> * <span class="number">60</span> * <span class="number">60</span></span><br><span class="line">        &#125;)</span><br><span class="line">      ]</span><br><span class="line">    &#125;)</span><br><span class="line">  )</span><br><span class="line"></span><br><span class="line">  workbox.routing.registerRoute(</span><br><span class="line">    /^https:\/\/fonts\.googleapis\.com/,</span><br><span class="line">    <span class="keyword">new</span> workbox.strategies.StaleWhileRevalidate(&#123;</span><br><span class="line">      cacheName: <span class="string">'google-fonts-stylesheets'</span></span><br><span class="line">    &#125;)</span><br><span class="line">  )</span><br><span class="line"></span><br><span class="line">  workbox.routing.registerRoute(</span><br><span class="line">    /^https:\/\/fonts\.gstatic\.com/,</span><br><span class="line">    <span class="keyword">new</span> workbox.strategies.CacheFirst(&#123;</span><br><span class="line">      cacheName: <span class="string">'google-fonts-webfonts'</span>,</span><br><span class="line">      plugins: [</span><br><span class="line">        <span class="keyword">new</span> workbox.cacheableResponse.Plugin(&#123;</span><br><span class="line">          statuses: [<span class="number">0</span>, <span class="number">200</span>]</span><br><span class="line">        &#125;),</span><br><span class="line">        <span class="keyword">new</span> workbox.expiration.Plugin(&#123;</span><br><span class="line">          maxAgeSeconds: <span class="number">60</span> * <span class="number">60</span> * <span class="number">24</span> * <span class="number">365</span>,</span><br><span class="line">          maxEntries: <span class="number">30</span></span><br><span class="line">        &#125;)</span><br><span class="line">      ]</span><br><span class="line">    &#125;)</span><br><span class="line">  )</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`Boo! Workbox didn't load 😬`</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>基本完成了，可以用 Chrome 的 Audits 的工具跑了一下分，看看还有什么地方要修改的。</p></section>
+
+  <a
+  class="license-link"
+  rel="license"
+  href="https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.zh-Hans"
+>
+  <img
+    class="license-img"
+    alt="知识共享许可协议"
+    src="https://img.shields.io/badge/license-BY--NC--SA%204.0-green"
+  />
+</a>
+
+  <section class="article-more">
+    
+    <a
+      class=""
+      href="/post/2019/07/24/about-manifest/"
+      title="对于 PWA 应用的 manifest.json 文件的解释"
+    >
+      &larr;&nbsp;对于 PWA 应用的 manifest.json 文件的解释
+    </a>
+     
+    <a
+      class=""
+      href="/post/2019/07/22/understand-link-prexxx/"
+      title="了解 <Link> 标签上 Rel=prexxx 的作用"
+    >
+      了解 <Link> 标签上 Rel=prexxx 的作用&nbsp;&rarr;
+    </a>
+    
+  </section>
+</article></main>
+    <footer class="footer container">
+  <ul class="sns-list">
+    <li class="sns-list-item">
+      <p class="">
+        共计&#58; 61 篇
+      </p>
+    </li>
+    <li class="sns-list-item">
+      <p class="">
+        <span class=""
+          >总字数&#58; 63.9k</span
+        >
+      </p>
+    </li>
+  </ul>
+
+  <ul class="sns-list">
+    
+    <li class="sns-list-item">
+      <a
+        class="sns-list-link"
+        target="_blank"
+        rel="noopener"
+        href="https://github.com/xrr2016"
+        >Github</a
+      >
+    </li>
+     
+    <li class="sns-list-item">
+      <a
+        class="sns-list-link"
+        target="_blank"
+        rel="noopener"
+        href="https://juejin.im/user/576666b7207703006b1e0f09"
+        >掘金</a
+      >
+    </li>
+     
+    <li class="sns-list-item">
+      <a
+        class="sns-list-link"
+        target="_blank"
+        rel="noopener"
+        href="https://zhihu.com/people/needforchange/posts"
+        >知乎</a
+      >
+    </li>
+     
+    <li>
+      <a
+        class="sns-list-link"
+        target="_blank"
+        rel="noopener"
+        href="https://leetcode-cn.com/u/coldstone"
+        >力扣</a
+      >
+    </li>
+    
+    <li class="sns-list-item">
+      <a class="rss-link" href="/atom.xml">
+        <svg
+          class=""
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 5c7.18 0 13 5.82 13 13M6 11a7 7 0 017 7m-6 0a1 1 0 11-2 0 1 1 0 012 0z"
+          />
+        </svg>
+      </a>
+    </li>
+  </ul>
+
+  <ul class="sns-list">
+    <li class="sns-list-item">
+      <a
+        class="sns-list-link"
+        href="https://colmugx.github.io/blog/"
+        target="_blank"
+        >colmugx</a
+      >
+    </li>
+    <li class="sns-list-item">
+      <a class="sns-list-link" href="https://kalasearch.cn/blog" target="_blank"
+        >卡拉搜索</a
+      >
+    </li>
+    <li class="sns-list-item">
+      <a class="sns-list-link" href="https://blog.inmind.ltd/" target="_blank"
+        >Mind's blog</a
+      >
+    </li>
+    <li class="sns-list-item">
+      <a
+        class="sns-list-link"
+        href="https://oldchen.top/flutter-blog/#/"
+        target="_blank"
+        >老晨子</a
+      >
+    </li>
+    <li class="sns-list-item">
+      <a class="sns-list-link" href="https://www.v2fy.com/" target="_blank"
+        >猫爪导航🐱</a
+      >
+    </li>
+    <li class="sns-list-item">
+      <a class="sns-list-link" href="https://wxsm.space" target="_blank"
+        >wxsm's space</a
+      >
+    </li>
+  </ul>
+</footer>
+ <!--
+ Copyright (c) 2021 Cold Stone
+ 
+ This software is released under the MIT License.
+ https://opensource.org/licenses/MIT
+-->
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.7.2/build/highlight.min.js"></script>
+<script src="/index.js"></script>
+
+  </body>
+</html>

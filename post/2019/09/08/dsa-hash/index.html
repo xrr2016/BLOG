@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+  <meta name="renderer" content="webkit|ie-comp|ie-stand" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="theme-color" content="#333333" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="google" content="notranslate" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="keyword" content="冷石, 前端, 面试，Web, Js, CSS, Node.js, Frontend, Flutter, Docker, Dart, Mysql, Egg.js" />
+  <meta name="description" content="孑然一身，傲立于世" />
+  <title>冷石的博客</title>
+  <base href="/" />
+  <link rel="preconnect" href="//cdn.jsdelivr.net" />
+  <link rel="shortcut icon" href="/icons/icon-72x72.png" />
+  <link
+    rel="apple-touch-icon"
+    href="/icons/icon-192x192.png"
+  />
+  <link
+    rel="stylesheet"
+    href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.7.2/build/styles/atom-one-light.min.css"
+  />
+  <link rel="stylesheet" href="/index.css">
+  <script
+    data-ad-client="ca-pub-1196485898698315"
+    async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+  ></script>
+</head>
+
+  <body>
+    <header class="header">
+  <a class="logo" href="/">
+    <img
+      class="logo-img"
+      src="https://avatars.githubusercontent.com/u/18013127?v=4"
+    />
+  </a>
+  <div class="color" id="color"></div>
+</header>
+
+    <main class=""><article class="container article">
+    
+      <div class="article-cover">
+        <img decoding="async" loading="lazy" src="https://cdn.pixabay.com/photo/2021/05/13/12/34/peony-6250764_960_720.jpg" alt="cover" />
+      </div>
+    
+
+    <h1 class="article-title">数据结构与算法之哈希表</h1>
+ 
+    <p class="article-meta">
+      <span class="article-meta-item">
+        最后更新&#58;&nbsp;<time
+          class="post-time"
+          datetime="2021-06-28"
+          >2021-06-28</time
+        >
+      </span>
+      <span class="article-meta-item"
+        >阅读时间&#58;&nbsp;2
+        min</span
+      >
+
+    </p>
+  </section>
+
+  <section class=""><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>哈希表是一种常用的数据结构，可以快速的插入和取用，但是查询数据效率低下。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>基于数组实现哈希表，数组的长度是预先设定的，有需要是增加。最常见的是将数组的长度设为一个质数</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> HashTable &#123;</span><br><span class="line">  table = &lt;<span class="built_in">any</span>&gt;[]</span><br><span class="line"></span><br><span class="line">  <span class="keyword">constructor</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">this</span>.table = <span class="built_in">Array</span>.from(&#123;</span><br><span class="line">      length: <span class="number">137</span></span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 将字符串的 ASCLL 码相加对数组长度求余</span></span><br><span class="line">  hash(data: <span class="built_in">string</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> total = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> index = <span class="number">0</span>; index &lt; data.length; index++) &#123;</span><br><span class="line">      total += data.charCodeAt(index)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> total % <span class="keyword">this</span>.table.length</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 更优的 hash 方法</span></span><br><span class="line">  betterHash(data: <span class="built_in">string</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> H = <span class="number">37</span></span><br><span class="line">    <span class="keyword">let</span> total = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> index = <span class="number">0</span>; index &lt; data.length; index++) &#123;</span><br><span class="line">      total += H * total + data.charCodeAt(index)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    total = total % <span class="keyword">this</span>.table.length</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (total &lt; <span class="number">0</span>) &#123;</span><br><span class="line">      total += <span class="keyword">this</span>.table.length - <span class="number">1</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">parseInt</span>(total.toString())</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 存储数据</span></span><br><span class="line">  put(key: <span class="built_in">string</span>, data: <span class="built_in">any</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> pos = <span class="keyword">this</span>.betterHash(key)</span><br><span class="line">    <span class="keyword">this</span>.table[pos] = data</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 获取数据</span></span><br><span class="line">  <span class="keyword">get</span>(key: <span class="built_in">string</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.table[<span class="keyword">this</span>.betterHash(key)]</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 显示数据</span></span><br><span class="line">  show() &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> index = <span class="number">0</span>; index &lt; <span class="keyword">this</span>.table.length; index++) &#123;</span><br><span class="line">      <span class="keyword">const</span> item = <span class="keyword">this</span>.table[index]</span><br><span class="line">      <span class="keyword">if</span> (item) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">`<span class="subst">$&#123;index&#125;</span>: <span class="subst">$&#123;item&#125;</span>`</span>)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试下</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> hashTable = <span class="keyword">new</span> HashTable()</span><br><span class="line"></span><br><span class="line">hashTable.put(<span class="string">'David'</span>, <span class="string">'David'</span>)</span><br><span class="line">hashTable.put(<span class="string">'Jennifer'</span>, <span class="string">'Jennifer'</span>)</span><br><span class="line">hashTable.put(<span class="string">'Donnie'</span>, <span class="string">'Donnie'</span>)</span><br><span class="line">hashTable.put(<span class="string">'Raymond'</span>, <span class="string">'Raymond'</span>)</span><br><span class="line">hashTable.put(<span class="string">'Cynthia'</span>, <span class="string">'Cynthia'</span>)</span><br><span class="line">hashTable.put(<span class="string">'Mike'</span>, <span class="string">'Mike'</span>)</span><br><span class="line">hashTable.put(<span class="string">'Clayton'</span>, <span class="string">'Clayton'</span>)</span><br><span class="line">hashTable.put(<span class="string">'Danny'</span>, <span class="string">'Danny'</span>)</span><br><span class="line">hashTable.put(<span class="string">'Jonathan'</span>, <span class="string">'Jonathan'</span>)</span><br><span class="line"></span><br><span class="line">hashTable.show()</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'Jonathan: '</span>, hashTable.get(<span class="string">'Jonathan'</span>))</span><br></pre></td></tr></table></figure>
+
+<p>输出</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">12</span>: Jennifer</span><br><span class="line"><span class="number">22</span>: Raymond</span><br><span class="line"><span class="number">55</span>: Donnie</span><br><span class="line"><span class="number">58</span>: Clayton</span><br><span class="line"><span class="number">80</span>: Jonathan</span><br><span class="line"><span class="number">82</span>: Mike</span><br><span class="line"><span class="number">103</span>: Cynthia</span><br><span class="line"><span class="number">110</span>: Danny</span><br><span class="line">Jonathan:  Jonathan</span><br></pre></td></tr></table></figure>
+
+<h2 id="碰撞处理"><a href="#碰撞处理" class="headerlink" title="碰撞处理"></a>碰撞处理</h2><p>当哈希方法对于多个输入产生了相同的输出是就会出现碰撞，两种可以解决键的碰撞问题开链法以及线性探测法</p>
+<p>开链法</p>
+<p>开链法指的是在实现 hash 表的底层数组中，每个数组又是一个新的数据结构，比如另一个数组，这样即使有两个键 hash 后的值相同，依然被保存在同样的位置，但是他们在第二个数组中的位置是不同的。</p>
+<p>要实现开链法，在创建存储键值的数组时，通过一个函数创建一个新的数组，然后将该数组赋值给 hash 表里的每一个元素，创建一个二维数组。</p>
+<p>线性探测法</p>
+<p>线性探测法指的是当发生碰撞时检查 hash 表里的下一个位置是否为空，如果为空就将数据存入该位置，如果不为空，则继续查找下一个位置，直到找到空位子为止。通常来说如果数组的大小是待存储数据个数的 1.5 倍时，那么用开链法；如果数组的大小是待存储的数据两倍以上时，那么使用线性探测法。</p></section>
+
+  <a
+  class="license-link"
+  rel="license"
+  href="https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.zh-Hans"
+>
+  <img
+    class="license-img"
+    alt="知识共享许可协议"
+    src="https://img.shields.io/badge/license-BY--NC--SA%204.0-green"
+  />
+</a>
+
+  <section class="article-more">
+    
+    <a
+      class=""
+      href="/post/2019/09/11/flutter-provider-todos-01/"
+      title="使用 Provider 管理 Flutter 应用状态 (上)"
+    >
+      &larr;&nbsp;使用 Provider 管理 Flutter 应用状态 (上)
+    </a>
+     
+    <a
+      class=""
+      href="/post/2019/08/31/egg-redis-cache/"
+      title="在 Egg.js 中使用 Redis 缓存提升性能"
+    >
+      在 Egg.js 中使用 Redis 缓存提升性能&nbsp;&rarr;
+    </a>
+    
+  </section>
+</article></main>
+    <footer class="footer container">
+  <ul class="sns-list">
+    <li class="sns-list-item">
+      <p class="">
+        共计&#58; 61 篇
+      </p>
+    </li>
+    <li class="sns-list-item">
+      <p class="">
+        <span class=""
+          >总字数&#58; 63.9k</span
+        >
+      </p>
+    </li>
+  </ul>
+
+  <ul class="sns-list">
+    
+    <li class="sns-list-item">
+      <a
+        class="sns-list-link"
+        target="_blank"
+        rel="noopener"
+        href="https://github.com/xrr2016"
+        >Github</a
+      >
+    </li>
+     
+    <li class="sns-list-item">
+      <a
+        class="sns-list-link"
+        target="_blank"
+        rel="noopener"
+        href="https://juejin.im/user/576666b7207703006b1e0f09"
+        >掘金</a
+      >
+    </li>
+     
+    <li class="sns-list-item">
+      <a
+        class="sns-list-link"
+        target="_blank"
+        rel="noopener"
+        href="https://zhihu.com/people/needforchange/posts"
+        >知乎</a
+      >
+    </li>
+     
+    <li>
+      <a
+        class="sns-list-link"
+        target="_blank"
+        rel="noopener"
+        href="https://leetcode-cn.com/u/coldstone"
+        >力扣</a
+      >
+    </li>
+    
+    <li class="sns-list-item">
+      <a class="rss-link" href="/atom.xml">
+        <svg
+          class=""
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 5c7.18 0 13 5.82 13 13M6 11a7 7 0 017 7m-6 0a1 1 0 11-2 0 1 1 0 012 0z"
+          />
+        </svg>
+      </a>
+    </li>
+  </ul>
+
+  <ul class="sns-list">
+    <li class="sns-list-item">
+      <a
+        class="sns-list-link"
+        href="https://colmugx.github.io/blog/"
+        target="_blank"
+        >colmugx</a
+      >
+    </li>
+    <li class="sns-list-item">
+      <a class="sns-list-link" href="https://kalasearch.cn/blog" target="_blank"
+        >卡拉搜索</a
+      >
+    </li>
+    <li class="sns-list-item">
+      <a class="sns-list-link" href="https://blog.inmind.ltd/" target="_blank"
+        >Mind's blog</a
+      >
+    </li>
+    <li class="sns-list-item">
+      <a
+        class="sns-list-link"
+        href="https://oldchen.top/flutter-blog/#/"
+        target="_blank"
+        >老晨子</a
+      >
+    </li>
+    <li class="sns-list-item">
+      <a class="sns-list-link" href="https://www.v2fy.com/" target="_blank"
+        >猫爪导航🐱</a
+      >
+    </li>
+    <li class="sns-list-item">
+      <a class="sns-list-link" href="https://wxsm.space" target="_blank"
+        >wxsm's space</a
+      >
+    </li>
+  </ul>
+</footer>
+ <!--
+ Copyright (c) 2021 Cold Stone
+ 
+ This software is released under the MIT License.
+ https://opensource.org/licenses/MIT
+-->
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.7.2/build/highlight.min.js"></script>
+<script src="/index.js"></script>
+
+  </body>
+</html>

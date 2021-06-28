@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+  <meta name="renderer" content="webkit|ie-comp|ie-stand" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="theme-color" content="#333333" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="google" content="notranslate" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="keyword" content="冷石, 前端, 面试，Web, Js, CSS, Node.js, Frontend, Flutter, Docker, Dart, Mysql, Egg.js" />
+  <meta name="description" content="孑然一身，傲立于世" />
+  <title>冷石的博客</title>
+  <base href="/" />
+  <link rel="preconnect" href="//cdn.jsdelivr.net" />
+  <link rel="shortcut icon" href="/icons/icon-72x72.png" />
+  <link
+    rel="apple-touch-icon"
+    href="/icons/icon-192x192.png"
+  />
+  <link
+    rel="stylesheet"
+    href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.7.2/build/styles/atom-one-light.min.css"
+  />
+  <link rel="stylesheet" href="/index.css">
+  <script
+    data-ad-client="ca-pub-1196485898698315"
+    async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+  ></script>
+</head>
+
+  <body>
+    <header class="header">
+  <a class="logo" href="/">
+    <img
+      class="logo-img"
+      src="https://avatars.githubusercontent.com/u/18013127?v=4"
+    />
+  </a>
+  <div class="color" id="color"></div>
+</header>
+
+    <main class=""><article class="container article">
+    
+      <div class="article-cover">
+        <img decoding="async" loading="lazy" src="https://cdn.pixabay.com/photo/2020/06/15/09/30/butterfly-5301066_960_720.jpg" alt="cover" />
+      </div>
+    
+
+    <h1 class="article-title">记录两个使用 Flutter 的 DropdownButton 问题</h1>
+ 
+    <p class="article-meta">
+      <span class="article-meta-item">
+        最后更新&#58;&nbsp;<time
+          class="post-time"
+          datetime="2021-06-28"
+          >2021-06-28</time
+        >
+      </span>
+      <span class="article-meta-item"
+        >阅读时间&#58;&nbsp;1
+        min</span
+      >
+
+    </p>
+  </section>
+
+  <section class=""><p>这几天在使用 <code>Flutter</code> 开发应用过程中遇到关于 <code>DropdownButton</code> 两个问题，记录一下。</p>
+<p>问题一：在 <code>showModalBottomSheet</code> 里面使用 <code>DropdownButton</code> 改变选择后界面不变化。</p>
+<p><img src="./images/flutter-dropdown-problem/dropdown-no-change.gif" alt="no-change"></p>
+<p>但是 <code>onChanged</code> 事件已经触发</p>
+<p><img src="./images/flutter-dropdown-problem/console.png" alt="console"></p>
+<p>代码如下</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">int</span> _type = <span class="number">0</span>;</span><br><span class="line">...</span><br><span class="line">IconButton(</span><br><span class="line">  icon: Icon(Icons.filter_list),</span><br><span class="line">  onPressed: () &#123;</span><br><span class="line">    showModalBottomSheet(</span><br><span class="line">      context: context,</span><br><span class="line">      builder: (BuildContext context) &#123;</span><br><span class="line">        <span class="keyword">return</span> Column(</span><br><span class="line">          crossAxisAlignment: CrossAxisAlignment.start,</span><br><span class="line">          children: &lt;Widget&gt;[</span><br><span class="line">            Padding(</span><br><span class="line">              padding: <span class="keyword">const</span> EdgeInsets.all(<span class="number">12.0</span>),</span><br><span class="line">              child: Row(</span><br><span class="line">                children: &lt;Widget&gt;[</span><br><span class="line">                  SizedBox(</span><br><span class="line">                    width: <span class="number">80.0</span>,</span><br><span class="line">                    child: Text(<span class="string">'类型: '</span>),</span><br><span class="line">                  ),</span><br><span class="line">                  DropdownButton&lt;<span class="built_in">int</span>&gt;(</span><br><span class="line">                    value: _type,</span><br><span class="line">                    onChanged: (<span class="built_in">int</span> newValue) &#123;</span><br><span class="line">                      setState(() &#123;</span><br><span class="line">                        _type = newValue;</span><br><span class="line">                      &#125;);</span><br><span class="line">                      <span class="built_in">print</span>(newValue.toString());</span><br><span class="line">                    &#125;,</span><br><span class="line">                    items: [</span><br><span class="line">                      DropdownMenuItem&lt;<span class="built_in">int</span>&gt;(</span><br><span class="line">                        value: <span class="number">0</span>,</span><br><span class="line">                        child: Text(<span class="string">'类型 1'</span>),</span><br><span class="line">                      ),</span><br><span class="line">                      DropdownMenuItem&lt;<span class="built_in">int</span>&gt;(</span><br><span class="line">                        value: <span class="number">1</span>,</span><br><span class="line">                        child: Text(<span class="string">'类型 2'</span>),</span><br><span class="line">                      ),</span><br><span class="line">                    ],</span><br><span class="line">                  ),</span><br><span class="line">                ],</span><br><span class="line">              ),</span><br><span class="line">            ),</span><br><span class="line">          ],</span><br><span class="line">        );</span><br><span class="line">      &#125;,</span><br><span class="line">    );</span><br><span class="line">  &#125;,</span><br><span class="line">),</span><br></pre></td></tr></table></figure>
+
+<p>解决方法：添加一个 <code>StatefulBuilder</code> 部件在最外层即可</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">showModalBottomSheet(</span><br><span class="line">  context: context,</span><br><span class="line">  builder: (BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> StatefulBuilder(</span><br><span class="line">      builder: (context, StateSetter setState) &#123;</span><br><span class="line">        <span class="keyword">return</span> Column(</span><br><span class="line">          crossAxisAlignment: CrossAxisAlignment.start,</span><br><span class="line">          children: &lt;Widget&gt;[</span><br><span class="line">            Padding(</span><br><span class="line">              padding: <span class="keyword">const</span> EdgeInsets.all(<span class="number">12.0</span>),</span><br><span class="line">              child: Row(</span><br><span class="line">                children: &lt;Widget&gt;[</span><br><span class="line">                  SizedBox(</span><br><span class="line">                    width: <span class="number">80.0</span>,</span><br><span class="line">                    child: Text(<span class="string">'类型: '</span>),</span><br><span class="line">                  ),</span><br><span class="line">                  DropdownButton&lt;<span class="built_in">int</span>&gt;(</span><br><span class="line">                    value: _type,</span><br><span class="line">                    onChanged: (<span class="built_in">int</span> newValue) &#123;</span><br><span class="line">                      setState(() &#123;</span><br><span class="line">                        _type = newValue;</span><br><span class="line">                      &#125;);</span><br><span class="line">                      <span class="built_in">print</span>(newValue.toString());</span><br><span class="line">                    &#125;,</span><br><span class="line">                    items: [</span><br><span class="line">                      DropdownMenuItem&lt;<span class="built_in">int</span>&gt;(</span><br><span class="line">                        value: <span class="number">0</span>,</span><br><span class="line">                        child: Text(<span class="string">'类型 1'</span>),</span><br><span class="line">                      ),</span><br><span class="line">                      DropdownMenuItem&lt;<span class="built_in">int</span>&gt;(</span><br><span class="line">                        value: <span class="number">1</span>,</span><br><span class="line">                        child: Text(<span class="string">'类型 2'</span>),</span><br><span class="line">                      ),</span><br><span class="line">                    ],</span><br><span class="line">                  ),</span><br><span class="line">                ],</span><br><span class="line">              ),</span><br><span class="line">            ),</span><br><span class="line">          ],</span><br><span class="line">        );</span><br><span class="line">      &#125;,</span><br><span class="line">    );</span><br><span class="line">  &#125;,</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>问题二：当多个 <code>DropdownMenuItem</code> 值相同时会报错</p>
+<p><img src="./images/flutter-dropdown-problem/crash.png" alt="crash"></p>
+<p>这个报错产生的原因是这里的 <code>DropdownMenuItem</code> 是请求后端接口后会生成很多选项，如果设置了 <code>DropdownButton</code> 的 <code>value</code> 值，那么 <code>DropdownMenuItem</code> 就会有相同的值，出现这个错误。</p>
+<p>解决方法：不设置 <code>DropdownButton</code> 的初始 <code>value</code> 值</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">DropdownButton&lt;<span class="built_in">int</span>&gt;(</span><br><span class="line">  <span class="comment">// value: 0,</span></span><br><span class="line">  onChanged: (<span class="built_in">int</span> newValue) &#123;</span><br><span class="line">    setState(() &#123;&#125;);</span><br><span class="line">  &#125;,</span><br><span class="line">  items: types.map(</span><br><span class="line">    (item) &#123;</span><br><span class="line">      <span class="keyword">return</span> DropdownMenuItem&lt;<span class="built_in">int</span>&gt;(</span><br><span class="line">        value: item[<span class="string">"value"</span>],</span><br><span class="line">        child: Text(item[<span class="string">"label"</span>]),</span><br><span class="line">      );</span><br><span class="line">    &#125;,</span><br><span class="line">  ).toList(),</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>ps：这两个问题卡了我两天😔</p></section>
+
+  <a
+  class="license-link"
+  rel="license"
+  href="https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.zh-Hans"
+>
+  <img
+    class="license-img"
+    alt="知识共享许可协议"
+    src="https://img.shields.io/badge/license-BY--NC--SA%204.0-green"
+  />
+</a>
+
+  <section class="article-more">
+    
+    <a
+      class=""
+      href="/post/2020/03/26/learn-classchart-flowchart/"
+      title="PlantUML 类图及 Flowchart 流程图绘制入门"
+    >
+      &larr;&nbsp;PlantUML 类图及 Flowchart 流程图绘制入门
+    </a>
+     
+    <a
+      class=""
+      href="/post/2020/03/15/das-tree/"
+      title="数据结构与算法之二叉树"
+    >
+      数据结构与算法之二叉树&nbsp;&rarr;
+    </a>
+    
+  </section>
+</article></main>
+    <footer class="footer container">
+  <ul class="sns-list">
+    <li class="sns-list-item">
+      <p class="">
+        共计&#58; 61 篇
+      </p>
+    </li>
+    <li class="sns-list-item">
+      <p class="">
+        <span class=""
+          >总字数&#58; 63.9k</span
+        >
+      </p>
+    </li>
+  </ul>
+
+  <ul class="sns-list">
+    
+    <li class="sns-list-item">
+      <a
+        class="sns-list-link"
+        target="_blank"
+        rel="noopener"
+        href="https://github.com/xrr2016"
+        >Github</a
+      >
+    </li>
+     
+    <li class="sns-list-item">
+      <a
+        class="sns-list-link"
+        target="_blank"
+        rel="noopener"
+        href="https://juejin.im/user/576666b7207703006b1e0f09"
+        >掘金</a
+      >
+    </li>
+     
+    <li class="sns-list-item">
+      <a
+        class="sns-list-link"
+        target="_blank"
+        rel="noopener"
+        href="https://zhihu.com/people/needforchange/posts"
+        >知乎</a
+      >
+    </li>
+     
+    <li>
+      <a
+        class="sns-list-link"
+        target="_blank"
+        rel="noopener"
+        href="https://leetcode-cn.com/u/coldstone"
+        >力扣</a
+      >
+    </li>
+    
+    <li class="sns-list-item">
+      <a class="rss-link" href="/atom.xml">
+        <svg
+          class=""
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 5c7.18 0 13 5.82 13 13M6 11a7 7 0 017 7m-6 0a1 1 0 11-2 0 1 1 0 012 0z"
+          />
+        </svg>
+      </a>
+    </li>
+  </ul>
+
+  <ul class="sns-list">
+    <li class="sns-list-item">
+      <a
+        class="sns-list-link"
+        href="https://colmugx.github.io/blog/"
+        target="_blank"
+        >colmugx</a
+      >
+    </li>
+    <li class="sns-list-item">
+      <a class="sns-list-link" href="https://kalasearch.cn/blog" target="_blank"
+        >卡拉搜索</a
+      >
+    </li>
+    <li class="sns-list-item">
+      <a class="sns-list-link" href="https://blog.inmind.ltd/" target="_blank"
+        >Mind's blog</a
+      >
+    </li>
+    <li class="sns-list-item">
+      <a
+        class="sns-list-link"
+        href="https://oldchen.top/flutter-blog/#/"
+        target="_blank"
+        >老晨子</a
+      >
+    </li>
+    <li class="sns-list-item">
+      <a class="sns-list-link" href="https://www.v2fy.com/" target="_blank"
+        >猫爪导航🐱</a
+      >
+    </li>
+    <li class="sns-list-item">
+      <a class="sns-list-link" href="https://wxsm.space" target="_blank"
+        >wxsm's space</a
+      >
+    </li>
+  </ul>
+</footer>
+ <!--
+ Copyright (c) 2021 Cold Stone
+ 
+ This software is released under the MIT License.
+ https://opensource.org/licenses/MIT
+-->
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.7.2/build/highlight.min.js"></script>
+<script src="/index.js"></script>
+
+  </body>
+</html>
